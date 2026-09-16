@@ -363,6 +363,14 @@ class FrameMainImpl(FrameMain):
                     wx.MessageBox(_(u'选择的文件不是 %s 存档文件') % source_name, _(u'错误'), wx.OK | wx.ICON_ERROR)
                     return
 
+                # Android 转为 Steam 时，与 Xbox 转换一样写入本机 Steam 账号 ID
+                if source_type == SaveType.MOBILE and target_type == SaveType.STEAM:
+                    if len(locator.system_steam_save_path) == 0:
+                        wx.MessageBox(_(u'未找到 Steam 存档文件'), _(u'错误'), wx.OK | wx.ICON_ERROR)
+                        return
+                    steam_id, __ = locator.system_steam_save_path[0]
+                    editor.set_account_id(int(steam_id))
+
                 # 转换存档类型
                 new_editor = editor.convert(target_type)
 
