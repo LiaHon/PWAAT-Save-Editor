@@ -4,8 +4,9 @@
 ## 功能
 基本功能：
 * 导入、导出存档
-* Steam 与 Xbox 存档互相转换  
-（根据社区反馈，Xbox 存档与 Switch 存档格式相同，因此也可以 Steam、Switch 存档互转。但是你需要自行处理 Switch 存档导入导出问题。）
+* Steam、Xbox、Android 存档互相转换  
+（根据社区反馈，Xbox 存档与 Switch 存档格式相同，因此也可以 Steam、Switch 存档互转。但是你需要自行处理 Switch 存档导入导出问题。  
+移动版存档位于游戏数据目录下的 `files/savedata/systemdata`，例如 Android 为 `Android/data/jp.co.capcom.gyakusai123/files/savedata/systemdata`。）
 * 解锁章节
 * 修改法庭内血量
 * 存档槽位管理，包括删除、复制、移动存档槽位数据  

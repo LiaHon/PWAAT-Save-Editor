@@ -3,8 +3,9 @@
 ## Features
 Basic features:
 * Import and export save files
-* Convert save files between Steam and Xbox
-(According to community feedback, Xbox save files have the same format as Switch save files, so Steam and Switch save files can also be converted. However, you need to handle the Switch save file import/export issues yourself.)
+* Convert save files between Steam, Xbox, and Android
+(According to community feedback, Xbox save files have the same format as Switch save files, so Steam and Switch save files can also be converted. However, you need to handle the Switch save file import/export issues yourself.
+The mobile save file is located at `files/savedata/systemdata` inside the game data directory, e.g. `Android/data/jp.co.capcom.gyakusai123/files/savedata/systemdata` on Android.)
 * Unlock chapters
 * Modify health in court
 * Save slot management, including delete, copy, and move save slot data
