@@ -9,6 +9,14 @@ from .mobile import *
 import app.utils as utils
 
 T = TypeVar('T')
+
+# 当前 Android 版仍使用 0x1001，且只支持原有的 7 种语言。
+# Android 版更新后，只需在这里更新版本/语言范围并复查下方保留字段清理逻辑。
+_MOBILE_OUTER_SAVE_VERSION = 1
+_MOBILE_SYSTEM_SAVE_VERSION = 0x1001
+_MOBILE_SUPPORTED_LANGUAGE_IDS = range(7)
+_MOBILE_FALLBACK_LANGUAGE_ID = 1  # English / USA
+
 def _copy_attr(from_: object, to: T, ignore_incompatible_types: bool = True) -> T:
     assert isinstance(to, Structure)
     assert isinstance(from_, Structure)
@@ -21,6 +29,26 @@ def _copy_attr(from_: object, to: T, ignore_incompatible_types: bool = True) -> 
             if not ignore_incompatible_types:
                 raise
     return to
+
+def _apply_mobile_compatibility(data: PresideDataMobile) -> None:
+    """将其他平台的存档统一降级为当前 Android 版可读取的格式。"""
+    data.save_version_ = Int32(_MOBILE_OUTER_SAVE_VERSION)
+    data.system_data_.save_ver = Int32(_MOBILE_SYSTEM_SAVE_VERSION)
+
+    # reserve[1] 是 Steam 账号 ID；reserve[2] 保存 0x1002 新增的语言/功能标志。
+    data.system_data_.reserve_work_.reserve[1] = Int32(0)
+    data.system_data_.reserve_work_.reserve[2] = Int32(0)
+
+    # 旧 Android 不支持新版新增的葡萄牙语（7）和西班牙语（8），统一回退到英语。
+    language_id = data.system_data_.option_work_.language_type
+    if language_id not in _MOBILE_SUPPORTED_LANGUAGE_IDS:
+        data.system_data_.option_work_.language_type = UInt16(_MOBILE_FALLBACK_LANGUAGE_ID)
+
+    # 0x1002 使用每个槽位的 reserve[0] 保存章节跳转/停止成就标志，旧 Android 不识别。
+    for game_data in data.slot_list_:
+        game_data.game_reserve_work_.reserve[0] = Int32(0)
+
+    data.expansion_data_.is_agree = bool_(1)
 
 def steam2xbox(data: PresideData) -> PresideDataXbox:
     """
@@ -94,7 +122,6 @@ def xbox2mobile(data: PresideDataXbox) -> PresideDataMobile:
     移动版与 Xbox 版的存档槽位数据（`GameData`）结构相同。
     """
     mobile = PresideDataMobile.new()
-    mobile.save_version_ = Int32(1)
     # SystemDataMobile
     system_data_xbox = data.system_data_
     system_data_mobile = SystemDataMobile.new()
@@ -109,7 +136,7 @@ def xbox2mobile(data: PresideDataXbox) -> PresideDataMobile:
     for i, game_data_xbox in enumerate(data.slot_list_):
         mobile.slot_list_[i] = game_data_xbox
 
-    mobile.expansion_data_.is_agree = bool_(1)
+    _apply_mobile_compatibility(mobile)
     return deepcopy(mobile)
 
 def mobile2xbox(data: PresideDataMobile) -> PresideDataXbox:
@@ -138,7 +165,6 @@ def steam2mobile(data: PresideData) -> PresideDataMobile:
     将 Steam 存档数据转换为移动版（Android）存档数据。
     """
     mobile = PresideDataMobile.new()
-    mobile.save_version_ = Int32(1)
     # OptionWorkMobile
     option_work_steam = data.system_data_.option_work_
     option_work_mobile = OptionWorkMobile.new()
@@ -161,7 +187,7 @@ def steam2mobile(data: PresideData) -> PresideDataMobile:
         game_data_xbox.msg_data_ = msg_data_xbox
         mobile.slot_list_[i] = game_data_xbox
 
-    mobile.expansion_data_.is_agree = bool_(1)
+    _apply_mobile_compatibility(mobile)
     return deepcopy(mobile)
 
 def mobile2steam(data: PresideDataMobile) -> PresideData:
