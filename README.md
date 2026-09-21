@@ -38,18 +38,22 @@
 见“转换”菜单下的内容。
 
 ### Android 存档转换
-Android 存档位于游戏数据目录下的 `files/savedata/systemdata`，例如 `Android/data/jp.co.capcom.gyakusai123/files/savedata/systemdata`。
+Android 存档位于 `/sdcard/Android/data/jp.co.capcom.gyakusai123/files/savedata/systemdata`。
 
 > [!IMPORTANT]
-> 由于Android端至今 (2026.9.20) 未同步进行游戏上一次的大更新，所以存档版本落后于其他端。 Android 存档版本为 `0x1001`，而 Steam 存档版本为 `0x1002`。旧版游戏会拒绝读取版本号高于自身的存档。
+> Android 端游戏版本落后于 PC 端，因此二者存档格式存在差异。
+> 存档转换时会自动进行兼容性处理，经过测试并未发现任何明显问题。但是**仍然建议转换或覆盖存档前备份原文件**。
+
+<details>
+
+<summary>技术细节</summary>
+
+由于Android端至今 (2026.9.20) 未同步进行游戏上一次的大更新，所以存档版本落后于其他端。 Android 存档版本为 `0x1001`，而 Steam 存档版本为 `0x1002`。旧版游戏会拒绝读取版本号高于自身的存档。
 
 * Steam/Xbox → Android：编辑器会将目标存档降级为 `0x1001`，并清除账号 ID、新版功能标志等目标平台不支持的数据。
 * 旧版 Android 只支持原有的 7 种语言。若来源存档使用新版新增的葡萄牙语或西班牙语，转换后会自动回退到英语。
 * Android → Steam/Xbox：编辑器会保留 Android 的旧版本号，让新版游戏执行自身的升级流程。导入后建议启动游戏并正常保存一次。
-* 新旧版本间的双向转换未在Xbox与Switch端实机测试。
-
-> [!CAUTION]
-> 转换或覆盖存档前务必备份原文件。
+</details>
 
 ### 解锁章节
 1. 在“文件”菜单内打开任意存档

@@ -38,18 +38,22 @@ See the "Convert" menu.
 See the "Convert" menu.
 
 ### Convert Android Save Files
-The Android save file is located at `files/savedata/systemdata` inside the game data directory, for example `Android/data/jp.co.capcom.gyakusai123/files/savedata/systemdata`.
+The Android save file is located at `/sdcard/Android/data/jp.co.capcom.gyakusai123/files/savedata/systemdata`.
 
 > [!IMPORTANT]
-> As of September 20, 2026, the Android release has not received the game's latest major update, so its save format is behind the other platforms. The Android save version is `0x1001`, while the Steam save version is `0x1002`. An older game rejects a save whose version is newer than its own.
+> The Android build is behind the PC build, so their save formats differ.
+> Conversion handles compatibility automatically and no obvious issues were found in testing. But it is still recommended to **back up the original file before converting or overwriting a save**.
+
+<details>
+
+<summary>Technical details</summary>
+
+As of September 20, 2026, the Android release has not received the game's latest major update, so its save format is behind the other platforms. The Android save version is `0x1001`, while the Steam save version is `0x1002`. An older game rejects a save whose version is newer than its own.
 
 * Steam/Xbox → Android: the editor downgrades the target save to `0x1001` and removes account IDs, newer feature flags, and other data unsupported by the target platform.
 * The older Android release supports only the original seven languages. Saves using the newly added Brazilian Portuguese or Latin American Spanish automatically fall back to English during conversion.
 * Android → Steam/Xbox: the editor preserves the older Android version number so that the newer game can run its own migration. After importing, launch the game and save normally once.
-* Bidirectional conversion between the old and new save versions has not been tested on real Xbox or Switch hardware.
-
-> [!CAUTION]
-> Always back up the original file before converting or overwriting a save.
+</details>
 
 ### Unlock Chapters
 1. Open any save file from the "File" menu
